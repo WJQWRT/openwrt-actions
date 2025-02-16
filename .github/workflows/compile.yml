@@ -81,6 +81,7 @@ jobs:
         echo "CPU=$(lscpu | grep -i "model name" | awk -F: '{print $2}')"
         echo "MEM=$(free -h | grep -i "Mem" | awk -F: '{print $2}')"
         echo "DISK=$(df -h / | awk 'NR==2 {print $5}')"
+        echo "DISK=$(df -h / | awk 'NR==2 {print $4}')"
 
     - name: 部署编译环境
       env:
