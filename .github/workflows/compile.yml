@@ -76,6 +76,12 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
+    - name: 当前系统相关信息 (CPU MEM DISK)
+      run: |
+        echo "CPU=$(lscpu | grep -i "model name" | awk -F: '{print $2}')"
+        echo "MEM=$(free -h | grep -i "Mem" | awk -F: '{print $2}')"
+        echo "DISK=$(df -h / | awk 'NR==2 {print $5}')"
+
     - name: 部署编译环境
       env:
         DEBIAN_FRONTEND: noninteractive
