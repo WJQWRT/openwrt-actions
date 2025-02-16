@@ -82,6 +82,7 @@ jobs:
         echo "MEM=$(free -h | grep -i "Mem" | awk -F: '{print $2}')"
         echo "DISK=$(df -h / | awk 'NR==2 {print $5}')"
         echo "DISK=$(df -h / | awk 'NR==2 {print $4}')"
+        df -h
 
     - name: 部署编译环境
       env:
