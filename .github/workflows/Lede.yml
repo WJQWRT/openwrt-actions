@@ -128,6 +128,32 @@ jobs:
           echo "REPO_TOKEN密匙制作教程：https://git.io/jm.md"
           exit 1
         fi
+  
+    - name: Freeing up disk space
+      uses: easimon/maximize-build-space@master
+      with: 
+        root-reserve-mb: 2048
+        swap-size-mb: 1
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
+        remove-docker-images: 'true'
+    
+    - name: Free up disk space complete
+      run: |
+        echo "Free up disk space complete"
+        echo "=============================================================================="
+        df -hT
+        echo "=============================================================================="
+  
+    - name: 当前系统相关信息 (CPU MEM DISK)
+      run: |
+        echo "CPU=$(lscpu | grep -i "model name" | awk -F: '{print $2}')"
+        echo "MEM=$(free -h | grep -i "Mem" | awk -F: '{print $2}')"
+        echo "DISK=$(df -h / | awk 'NR==2 {print $5}')"
+        echo "DISK=$(df -h / | awk 'NR==2 {print $4}')"
+        df -h
     
     - name: 准备结束
       uses: actions/checkout@v4
