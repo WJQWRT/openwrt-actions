@@ -116,6 +116,13 @@ jobs:
         cd ${GITHUB_WORKSPACE}
         source build/${FOLDER_NAME}/common.sh && CPU_Priority
 
+    - name: Free up disk space complete
+      run: |
+        echo "Free up disk space complete"
+        echo "=============================================================================="
+        df -hT
+        echo "=============================================================================="
+        
     - name: 部署编译环境
       env:
         DEBIAN_FRONTEND: noninteractive
