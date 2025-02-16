@@ -37,7 +37,7 @@ jobs:
         target: [Lede]
 
     steps:
-      - name: 释放Ubuntu磁盘空间
+    - name: 释放Ubuntu磁盘空间
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
@@ -77,7 +77,7 @@ jobs:
         echo "DISK=$(df -h / | awk 'NR==2 {print $5}')"
         echo "DISK=$(df -h / | awk 'NR==2 {print $4}')"
         df -h
-            
+
     - name: 准备结束
       uses: actions/checkout@v4
 
