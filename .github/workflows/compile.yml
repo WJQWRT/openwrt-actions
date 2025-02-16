@@ -107,6 +107,12 @@ jobs:
         df -hT
         echo "=============================================================================="
         
+    - name: 链接sdb
+      run: |
+        sudo mkdir -p /mnt/wrt-build
+        sudo chown ${USER}:${GROUPS} /mnt/wrt-build
+        sudo ln -sf /mnt/wrt-build ${GITHUB_WORKSPACE}
+
     - name: 部署编译环境
       env:
         DEBIAN_FRONTEND: noninteractive
