@@ -91,6 +91,7 @@ jobs:
         echo "DISK=$(df -h / | awk 'NR==2 {print $4}')"
         df -h
         echo "GITHUB_WORKSPACE=${GITHUB_WORKSPACE}"
+        sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
 
     - name: 准备结束
       uses: actions/checkout@v4
@@ -122,7 +123,7 @@ jobs:
         echo "=============================================================================="
         df -hT
         echo "=============================================================================="
-        
+
     - name: 部署编译环境
       env:
         DEBIAN_FRONTEND: noninteractive
