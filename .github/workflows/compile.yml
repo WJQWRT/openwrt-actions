@@ -36,69 +36,7 @@ jobs:
       matrix:
         target: [Lede]
 
-    steps:
-    - name: Before freeing up disk space
-      run: |
-        echo "Before freeing up disk space"
-        echo "=============================================================================="
-        df -hT
-        echo "=============================================================================="
-
-    - name: "Optimize Disk Space"
-      uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
-      with:
-        operate_sudo: "True"
-        general_include: ".+"
-        general_exclude: |-
-          ^GCC$
-          ^G\+\+$
-          Clang
-          LLVM
-        docker_include: ".+"
-        docker_prune: "True"
-        docker_clean: "True"
-        apt_prune: "True"
-        apt_clean: "True"
-        homebrew_prune: "True"
-        homebrew_clean: "True"
-        npm_prune: "True"
-        npm_clean: "True"
-        os_swap: "True"
-  
-    - name: Freeing up disk space
-      uses: easimon/maximize-build-space@master
-      with: 
-        root-reserve-mb: 8192
-        swap-size-mb: 4096
-        remove-dotnet: 'true'
-        remove-android: 'true'
-        remove-haskell: 'true'
-        remove-codeql: 'true'
-        remove-docker-images: 'true'
-
-    - name: Free up disk space complete
-      run: |
-        echo "Free up disk space complete"
-        echo "=============================================================================="
-        df -hT
-        echo "=============================================================================="
-
-    - name: 当前系统相关信息 (CPU MEM DISK)
-      run: |
-        echo "CPU=$(lscpu | grep -i "model name" | awk -F: '{print $2}')"
-        echo "MEM=$(free -h | grep -i "Mem" | awk -F: '{print $2}')"
-        echo "DISK=$(df -h / | awk 'NR==2 {print $5}')"
-        echo "DISK=$(df -h / | awk 'NR==2 {print $4}')"
-        df -h
-        echo "GITHUB_WORKSPACE=${GITHUB_WORKSPACE}"
-
-    - name: 链接
-      run: |
-        # sudo mkdir -p /mnt/wrt-build
-        sudo chown ${USER}:${GROUPS} /home/runner/work/openwrt-actions/openwrt-actions
-        sudo ln -sf /home/runner/work/openwrt-actions/openwrt-actions ${GITHUB_WORKSPACE}
-        df -hT
-
+    steps:    
     - name: 准备结束
       uses: actions/checkout@v4
 
@@ -123,13 +61,19 @@ jobs:
         cd ${GITHUB_WORKSPACE}
         source build/${FOLDER_NAME}/common.sh && CPU_Priority
 
-    - name: Free up disk space complete
-      run: |
-        echo "Free up disk space complete"
-        echo "=============================================================================="
-        df -hT
-        echo "=============================================================================="
-
+    - name: 释放Ubuntu磁盘空间
+      uses: endersonmenezes/free-disk-space@v2
+      with:
+        remove_android: true
+        remove_dotnet: true
+        remove_haskell: true
+        remove_tool_cache: true
+        remove_swap: true
+        remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+        remove_packages_one_command: true
+        remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/share/glade* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell"
+        testing: false
+        
     - name: 部署编译环境
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -142,7 +86,6 @@ jobs:
     - name: 下载"${{matrix.target}}"源码
       working-directory: /${{ env.DIY_WORK }}
       run: |
-        echo "${{env.DIY_WORK}}"
         git clone -b "${REPO_BRANCH}" --single-branch "${REPO_URL}" openwrt
         ln -sf /${{ env.DIY_WORK }}/openwrt ${GITHUB_WORKSPACE}/openwrt
         cp -Rf ${GITHUB_WORKSPACE}/build ${GITHUB_WORKSPACE}/openwrt/build
