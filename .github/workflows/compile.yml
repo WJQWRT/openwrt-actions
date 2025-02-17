@@ -126,8 +126,8 @@ jobs:
     - name: 链接
       run: |
         # sudo mkdir -p /mnt/wrt-build
-        # sudo chown ${USER}:${GROUPS} /mnt/wrt-build
-        # sudo ln -sf /mnt/wrt-build ${GITHUB_WORKSPACE}
+        sudo chown ${USER}:${GROUPS} /home/runner/work/openwrt-actions/openwrt-actions
+        sudo ln -sf /home/runner/work/openwrt-actions/openwrt-actions ${GITHUB_WORKSPACE}
         df -hT
 
     - name: 部署编译环境
