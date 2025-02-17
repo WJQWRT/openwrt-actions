@@ -92,6 +92,13 @@ jobs:
         df -h
         echo "GITHUB_WORKSPACE=${GITHUB_WORKSPACE}"
 
+    - name: 链接
+      run: |
+        # sudo mkdir -p /mnt/wrt-build
+        sudo chown ${USER}:${GROUPS} /home/runner/work/openwrt-actions/openwrt-actions
+        sudo ln -sf /home/runner/work/openwrt-actions/openwrt-actions ${GITHUB_WORKSPACE}
+        df -hT
+
     - name: 准备结束
       uses: actions/checkout@v4
 
@@ -122,13 +129,6 @@ jobs:
         echo "=============================================================================="
         df -hT
         echo "=============================================================================="
-        
-    - name: 链接
-      run: |
-        # sudo mkdir -p /mnt/wrt-build
-        sudo chown ${USER}:${GROUPS} /home/runner/work/openwrt-actions/openwrt-actions
-        sudo ln -sf /home/runner/work/openwrt-actions/openwrt-actions ${GITHUB_WORKSPACE}
-        df -hT
 
     - name: 部署编译环境
       env:
